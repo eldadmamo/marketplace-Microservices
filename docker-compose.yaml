@@ -1,0 +1,11 @@
+services:
+
+ redis:
+  container_name: redis_container
+  image: redis:alpine
+  restart: always 
+  ports:
+   - "6380:6379"
+  commands: redis-server --loglevel warning
+  volumes:
+   - ./docker-volumes/cache:/data
