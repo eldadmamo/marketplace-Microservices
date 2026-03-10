@@ -1,11 +1,196 @@
 services:
 
- redis:
-  container_name: redis_container
-  image: redis:alpine
-  restart: always 
-  ports:
-   - "6380:6379"
-  commands: redis-server --loglevel warning
-  volumes:
-   - ./docker-volumes/cache:/data
+  # ============================================================
+  # 🔍 ELASTICSEARCH
+  # ============================================================
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.0
+    container_name: marketplace_elasticsearch
+    restart: unless-stopped
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:9200/_cluster/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+    networks:
+      - marketplace
+
+  # ============================================================
+  # 📊 KIBANA
+  # ============================================================
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.17.0
+    container_name: marketplace_kibana
+    restart: unless-stopped
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:5601/api/status || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 60s
+    networks:
+      - marketplace
+
+  # ============================================================
+  # 🐘 POSTGRESQL
+  # ============================================================
+  postgres:
+    image: postgres:16
+    container_name: marketplace_postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: marketplace
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - marketplace
+
+  # ============================================================
+  # 🔴 REDIS
+  # ============================================================
+  redis:
+    image: redis:alpine
+    container_name: marketplace_redis
+    restart: unless-stopped
+    ports:
+      - "6380:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - marketplace
+
+  # ============================================================
+  # 🖥️ REDIS COMMANDER
+  # ============================================================
+  redis-commander:
+    image: rediscommander/redis-commander:latest
+    container_name: marketplace_redis_commander
+    restart: unless-stopped
+    environment:
+      REDIS_HOSTS: local:redis:6379
+    ports:
+      - "8082:8081"
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - marketplace
+
+  # ============================================================
+  # 🐰 RABBITMQ
+  # ============================================================
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: marketplace_rabbitmq
+    restart: unless-stopped
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - marketplace
+
+  # ============================================================
+  # 🗄️ MYSQL
+  # ============================================================
+  mysql:
+    image: mysql:8.0
+    container_name: marketplace_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: marketplace
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost -uroot -proot || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - marketplace
+
+  # ============================================================
+  # 🍃 MONGODB
+  # ============================================================
+  mongodb:
+    image: mongo:latest
+    container_name: marketplace_mongodb
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - marketplace
+
+# ============================================================
+# NETWORKS
+# ============================================================
+networks:
+  marketplace:
+    driver: bridge
+
+# ============================================================
+# VOLUMES
+# ============================================================
+volumes:
+  elasticsearch_data:
+  postgres_data:
+  redis_data:
+  rabbitmq_data:
+  mysql_data:
+  mongodb_data:
