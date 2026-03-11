@@ -71,7 +71,7 @@ export {
   SellerType,
 } from './interfaces/seller.interface';
 export { IEmailLocals } from './interfaces/email.interface';
-// export { uploads, videoUpload } from './interfaces/cloudinary-upload';
+export { uploads, videoUpload } from './cloudinary-upload';
 // export {
 //   BadRequestError,
 //   CustomError,
