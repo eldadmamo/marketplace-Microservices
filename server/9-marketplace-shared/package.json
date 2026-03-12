@@ -50,7 +50,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.23.0",
     "tslib": "^2.6.0",
-    "winston": "^3.13.0",
+    "winston": "^3.19.0",
     "winston-elasticsearch": "^0.18.0"
   },
   "devDependencies": {

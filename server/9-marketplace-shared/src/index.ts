@@ -72,19 +72,19 @@ export {
 } from './interfaces/seller.interface';
 export { IEmailLocals } from './interfaces/email.interface';
 export { uploads, videoUpload } from './cloudinary-upload';
-// export {
-//   BadRequestError,
-//   CustomError,
-//   ErrnoException,
-//   FileTooLargeError,
-//   IError,
-//   IErrorResponse,
-//   NotAuthorizedError,
-//   NotFoundError,
-//   ServerError,
-// } from './error-handler';
-// export { verifyGatewayRequest } from './gateway-middleware';
-// export { winstonLogger } from './logger';
+export {
+  BadRequestError,
+  CustomError,
+  ErrnoException,
+  FileTooLargeError,
+  IError,
+  IErrorResponse,
+  NotAuthorizedError,
+  NotFoundError,
+  ServerError,
+} from './error-handler';
+export { verifyGatewayRequest } from './gateway-middleware';
+export { winstonLogger } from './logger';
 // export {
 //   firstLetterUppercase,
 //   isDataURL,
