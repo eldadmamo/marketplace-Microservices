@@ -1,10 +1,14 @@
-name: Publish
+name: Publish 9-marketplace-shared
 
 on:
   push:
     branches: [main]
+    paths:
+      - 'server/9-marketplace-shared/**'
   pull_request:
     branches: [main]
+    paths:
+      - 'server/9-marketplace-shared/**'
 
 jobs:
   publish:
@@ -12,6 +16,10 @@ jobs:
     permissions:
       contents: read
       packages: write
+
+    defaults:
+      run:
+        working-directory: ./server/9-marketplace-shared
 
     steps:
       - uses: actions/checkout@v4
@@ -30,6 +38,6 @@ jobs:
           echo '//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}' >> build/.npmrc
 
       - run: npm publish
-        working-directory: ./build
+        working-directory: ./server/9-marketplace-shared/build
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
