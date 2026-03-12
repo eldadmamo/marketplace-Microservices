@@ -1,9 +1,11 @@
 {
+  "name": "@eldadmamo/marketplace-Microservices",
   "version": "1.0.0",
   "license": "MIT",
+  "description": "Helpers library for marketplace app",
+  "author": "Eldad Mamo <eldadf456@gmail.com>",
   "types": "./build/src/index.d.ts",
   "main": "./build/cjs/index.js",
-  "description": "Helpers library for marketplace app",
   "engines": {
     "node": ">=20"
   },
@@ -12,6 +14,28 @@
     "build:cjs": "cross-env NODE_ENV=production BABEL_ENV=cjs babel src --presets=./scripts/babel-preset.js --extensions .ts,.tsx --ignore \"src/**/*.specs.tsx\" --out-dir build/cjs --source-maps",
     "build:esm": "cross-env NODE_ENV=production BABEL_ENV=esm babel src --presets=./scripts/babel-preset.js --extensions .ts,.tsx --ignore \"src/**/*.specs.tsx\" --out-dir build/esm --source-maps"
   },
+  "dependencies": {
+    "@elastic/elasticsearch": "8.19.1",
+    "cloudinary": "^2.1.0",
+    "express": "^4.19.2",
+    "http-status-codes": "^2.3.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.23.0",
+    "tslib": "^2.6.0",
+    "winston": "^3.19.0",
+    "winston-elasticsearch": "^0.18.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.24.1",
+    "@babel/preset-env": "^7.24.3",
+    "@babel/preset-typescript": "^7.24.1",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/react": "^18.0.0",
+    "@types/react-dom": "^18.0.0",
+    "cross-env": "^7.0.3",
+    "typescript": "^5.4.3"
+  },
   "prettier": {
     "printWidth": 80,
     "semi": true,
@@ -19,8 +43,6 @@
     "trailingComma": "es5"
   },
   "keywords": [],
-  "name": "@eldadmamo/marketplace-Microservices",
-  "author": "Eldad Mamo <eldadf456@gmail.com>",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/eldadmamo/marketplace-Microservices.git"
@@ -41,27 +63,5 @@
       "import": "./build/esm/icons/index.js",
       "require": "./build/cjs/icons/index.js"
     }
-  },
-  "dependencies": {
-    "@elastic/elasticsearch": "^8.19.1",
-    "cloudinary": "^2.1.0",
-    "express": "^4.19.2",
-    "http-status-codes": "^2.3.0",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.23.0",
-    "tslib": "^2.6.0",
-    "winston": "^3.19.0",
-    "winston-elasticsearch": "^0.18.0"
-  },
-  "devDependencies": {
-    "@babel/cli": "^7.24.1",
-    "@babel/preset-env": "^7.24.3",
-    "@babel/preset-typescript": "^7.24.1",
-    "@types/express": "^4.17.21",
-    "@types/jsonwebtoken": "^9.0.6",
-    "@types/react": "^18.0.0",
-    "@types/react-dom": "^18.0.0",
-    "cross-env": "^7.0.3",
-    "typescript": "^5.4.3"
   }
 }

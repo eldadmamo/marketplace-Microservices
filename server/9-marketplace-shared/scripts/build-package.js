@@ -7,7 +7,7 @@ if (!existsSync('build')) {
 
 try {
   // Read and parse package.json
-  const pkg = require('./package.json');
+  const pkg = require('../package.json');
 
   // Rewrite paths for publishing from build/
   const buildPkg = {
