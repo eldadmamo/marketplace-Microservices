@@ -1,5 +1,29 @@
 {
+  "name": "marketplace-microservices",
+  "version": "1.0.0",
+  "description": "Marketplace microservices monorepo",
+  "private": true,
+  "workspaces": [
+    "server/*"
+  ],
+  "scripts": {
+    "install:all": "npm install --workspaces",
+    "build:all": "npm run build --workspaces",
+    "dev": "docker-compose up"
+  },
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
     "jsonwebtoken": "^9.0.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "author": "Eldad Mamo",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eldadmamo/marketplace-Microservices.git"
   }
 }

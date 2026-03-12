@@ -24,7 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
           node-version: 20.x
           registry-url: https://npm.pkg.github.com/
@@ -34,10 +34,9 @@ jobs:
       - run: npm run build
 
       - run: |
-          echo @eldadmamo:registry=https://npm.pkg.github.com/ > build/.npmrc
-          echo '//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}' >> build/.npmrc
+          echo @eldadmamo:registry=https://npm.pkg.github.com/ > .npmrc
+          echo '//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}' >> .npmrc
 
       - run: npm publish
-        working-directory: ./server/9-marketplace-shared/build
         env:
           NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
